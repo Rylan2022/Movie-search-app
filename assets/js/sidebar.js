@@ -15,4 +15,45 @@ export function sidebar() {
       genreLink();
     }
   );
+
+  const sidebarInner = document.createElement("div");
+  sidebarInput.classList.add("sidebar-inner");
+
+  sidebarInner.innerHTML = html`
+    <div class="sidebar-list">
+      <p class="title">Genre</p>
+    </div>
+
+    <div class="sidebar-list">
+      <p class="title">Language</p>
+
+      <a href="./movie-list.html" menu-close class="sidebar-link">English</a>
+
+      <a href="./movie-list.html" menu-close class="sidebar-link">Hindi</a>
+
+      <a href="./movie-list.html" menu-close class="sidebar-link">Bengali</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <p class="copyright">Copyright 2024­­® RakeshMolla</p>
+
+      <img
+        src="./assets/images/tmdb-logo.svg"
+        width="130"
+        height="17"
+        alt="the movie database logo"
+      />
+    </div>
+  `;
+
+  const genreLink = function() {
+    for (const [genreId, genreName] of Object.entries(genreList)) {
+
+        const link = document.createElement("a");
+        link.classList.add("sidebar-link");
+        link.setAttribute("href", "./movie-list.html");
+        link.setAttribute("menu-close", "");
+       // link.setAttribute("onclick", `getMovieList("with_genres=${genreId}", "${genreName}")`)
+    }
+  }
 }
