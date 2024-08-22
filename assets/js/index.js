@@ -29,11 +29,33 @@ const genreList = {
   },
 };
 
+// fetchDataFromServer(
+//   `https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`,
+//   function ({ genres }) {
+//     for (const { id, name } of genres) {
+//       genreList[id] = name;
+//     }
+
+//     fetchDataFromServer(
+//       `https://api.themoviedb.org/3/movie/popular?api_key=${api_key}&page=1`,
+//       heroBanner
+//     );
+//   }
+// );
+
+//? chatGPT 
+
 fetchDataFromServer(
   `https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`,
-  function ({ genres }) {
-    for (const { id, name } of genres) {
-      genreList[id] = name;
+  function (response) {
+    console.log(response); // Add this line to debug
+    const { genres } = response;
+    if (Array.isArray(genres)) {
+      for (const { id, name } of genres) {
+        genreList[id] = name;
+      }
+    } else {
+      console.error("Genres is not an array", genres);
     }
 
     fetchDataFromServer(
@@ -42,6 +64,12 @@ fetchDataFromServer(
     );
   }
 );
+
+
+
+
+
+
 
 const heroBanner = function ({ result: movieList }) {
   const banner = document.createElement("section");
@@ -131,5 +159,5 @@ const heroBanner = function ({ result: movieList }) {
 
   pageContent.appendChild(banner);
 
-  // addHeroSlide();
+  addHeroSlide();
 };
