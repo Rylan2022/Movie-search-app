@@ -1,6 +1,6 @@
 "use static";
 
-const api_key = "";
+const api_key = "b546bc3906d2becf396003dcdb4433c7";
 const imageBaseURL = "http://image.tmdb.org/t/p/";
 
 /*
