@@ -254,6 +254,41 @@ const heroBanner = function (response) {
   }
 
   pageContent.appendChild(banner);
-  // addHeroSlide(); // Call the function to add the slider functionality
+  addHeroSlide(); // Call the function to add the slider functionality
 };
+
+
+/**
+ * Hero slider functionality
+ */
+
+const addHeroSlide = function() {
+
+  const sliderItems = document.querySelectorAll("[slider-item]");
+
+  const sliderControls = document.querySelectorAll("[slider-control]");
+
+  let lastSliderItem = sliderItems[0];
+  let lastSliderControl = sliderControls[0];
+
+  lastSliderItem.classList.add("active");
+  lastSliderControl.classList.add("active");
+
+  const sliderStart = function () {
+    lastSliderItem.classList.remove("active");
+    lastSliderControl.classList.remove("active");
+
+    // `this` == slider-control
+    sliderItems[Number(this.getAttribute("slider-control"))].classList.add("active");
+    this.classList.add("active");
+
+    lastSliderItem = sliderItems[Number(this.getAttribute("slider-control"))];
+    lastSliderControl = this;
+  };
+
+  addEventOnElements(sliderControls, "click", sliderStart)
+}
+
+
+
 
