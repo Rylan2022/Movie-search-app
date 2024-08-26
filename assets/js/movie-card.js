@@ -1,0 +1,2 @@
+'use static';
+import { }

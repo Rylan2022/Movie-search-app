@@ -6,10 +6,30 @@ import all components and functions
 
 import { sidebar } from "./sidebar.js";
 import { api_key, imageBaseURL, fetchDataFromServer } from "./api.js";
-
+import { createMovieCard } from "./movie-card.js";
+ 
 const pageContent = document.querySelector("[page-content]");
 
 sidebar();
+
+/**
+ * Home page sections (Top rated, Upcoming Tranding movies)
+ */
+
+const homePageSections = [
+  {
+    title: "Upcoming Movies",
+    path: "/movie/upcoming",
+  },
+  {
+    title: "Today's Tranding Movies",
+    path: "/trending/movie/week",
+  },
+  {
+    title: "Top Rated Movies",
+    path: "/movie/top_rated",
+  },
+];
 
 /**
  * fetch all genres eg: [ { "id": "123", "name": "Action"}]
@@ -43,7 +63,7 @@ const genreList = {
 //   }
 // );
 
-//? chatGPT 
+//? chatGPT
 
 fetchDataFromServer(
   `https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}`,
@@ -64,14 +84,6 @@ fetchDataFromServer(
     );
   }
 );
-
-
-
-
-
-
-
-
 
 // const heroBanner = function ({ result: movieList }) {
 //   const banner = document.createElement("section");
@@ -255,15 +267,25 @@ const heroBanner = function (response) {
 
   pageContent.appendChild(banner);
   addHeroSlide(); // Call the function to add the slider functionality
-};
 
+  /**
+   *  fetch data for home page sections (Top rated, Upcoming Tranding movies)
+   */
+
+  for (const { title, path } of homePageSections) {
+    fetchDataFromServer(
+      `https://api.themoviedb.org/3${path}/movie/list?api_key=${api_key}&page=1`,
+      createMovieList,
+      title
+    );
+  }
+};
 
 /**
  * Hero slider functionality
  */
 
-const addHeroSlide = function() {
-
+const addHeroSlide = function () {
   const sliderItems = document.querySelectorAll("[slider-item]");
 
   const sliderControls = document.querySelectorAll("[slider-control]");
@@ -279,16 +301,70 @@ const addHeroSlide = function() {
     lastSliderControl.classList.remove("active");
 
     // `this` == slider-control
-    sliderItems[Number(this.getAttribute("slider-control"))].classList.add("active");
+    sliderItems[Number(this.getAttribute("slider-control"))].classList.add(
+      "active"
+    );
     this.classList.add("active");
 
     lastSliderItem = sliderItems[Number(this.getAttribute("slider-control"))];
     lastSliderControl = this;
   };
 
-  addEventOnElements(sliderControls, "click", sliderStart)
-}
+  addEventOnElements(sliderControls, "click", sliderStart);
+};
 
+const createMovieList = function ({ results: movieList }, title) {
+  const movieListElem = document.createElement("section");
+  movieListElem.classList.add("movie-list");
+  movieListElem.ariaLabel = `${title}`;
 
+  movieListElem.innerHTML = (
+    <html>
+      <div class="title-wrapper">
+        <h3 class="title-large">${title}</h3>
+      </div>
 
+      <div class="slider-list">
+        <div class="slider-inner">
+          <div class="movie-card">
+            <figure class="poster-box card-banner">
+              <img
+                src="./assets/images/slider-control.jpg"
+                alt="Puss in Boots: The Last Wish"
+                class="img-cover"
+              />
+            </figure>
 
+            <h4 class="title">Puss in Boots: The Last Wish</h4>
+
+            <div class="meta-list">
+              <div class="meta-item">
+                <img
+                  src="./assets/images/star.png"
+                  width="20"
+                  height="20"
+                  loading="lazy"
+                  alt="rating"
+                />
+
+                <span class="span">8.4</span>
+              </div>
+
+              <div class="card-badge">2022</div>
+            </div>
+
+            <a
+              href="./detail.html"
+              class="card-btn"
+              title="Puss in Boots: The Last Wish"
+            ></a>
+          </div>
+        </div>
+      </div>
+    </html>
+  );
+
+  for (const movie of movieList) {
+    const movieCard = createMovieCard(movie); // called from movie_card.js
+  }
+};
